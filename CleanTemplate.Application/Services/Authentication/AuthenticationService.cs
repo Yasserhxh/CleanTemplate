@@ -1,4 +1,6 @@
-﻿using CleanTemplate.Application.Common.Interfaces.Authentication;
+﻿using CleanTemplate.Application.Common.Interfaces;
+using CleanTemplate.Application.Common.Interfaces.Authentication;
+using CleanTemplate.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,25 +12,57 @@ namespace CleanTemplate.Application.Authentication
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IUserRepository _userRepository;
 
-        public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator)
+        public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
+            _userRepository = userRepository;
         }
 
         public AuthenticationResult Login(string Email, string Password)
         {
-            return new AuthenticationResult(Guid.NewGuid(), "TestFirst", "TestLast", Email, "Token");
+            // Check User exists
+            if(_userRepository.GetUserByEmail(Email) is not User user)
+                throw new Exception("User does not exist.");
+
+
+            // Validate password correct
+
+            if (user.Password != Password)
+                throw new Exception("Password is invalid");
+
+            // Create JWT token
+            var token = _jwtTokenGenerator.GenerateToken(user);
+
+
+            return new AuthenticationResult(
+                user,
+                token);
         }
 
         public AuthenticationResult Register(string FirstName, string LastName, string Email, string Password)
         {
             // Check if user already exists
+            if (_userRepository.GetUserByEmail(Email) is not null)
+                throw new Exception("User with given email already exists");
+
             // Create user
+            var user = new User
+            {
+                FirstName = FirstName,
+                LastName = LastName,
+                Email = Email,
+                Password = Password
+
+            };
+            _userRepository.Add(user); 
+            
+
             // Generate new JWT Token
-            var userID = Guid.NewGuid();
-            var token = _jwtTokenGenerator.GenerateToken(userID, FirstName, LastName);
-            return new AuthenticationResult(userID, FirstName, LastName, Email, token);
+
+            var token = _jwtTokenGenerator.GenerateToken(user);
+            return new AuthenticationResult(user, token);
         }
     }
 }

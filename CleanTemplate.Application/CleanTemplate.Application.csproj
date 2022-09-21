@@ -14,4 +14,8 @@
     <ProjectReference Include="..\CleanTemplate.Domain\CleanTemplate.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\Errors\" />
+  </ItemGroup>
+
 </Project>

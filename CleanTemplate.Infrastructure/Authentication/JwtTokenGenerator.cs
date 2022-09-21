@@ -1,5 +1,6 @@
 ﻿using CleanTemplate.Application.Common.Interfaces;
 using CleanTemplate.Application.Common.Interfaces.Authentication;
+using CleanTemplate.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -24,7 +25,7 @@ namespace CleanTemplate.Infrastructure.Authentication
             jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(Guid userId, string FirstName, string LastName)
+        public string GenerateToken(User user)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
@@ -32,9 +33,9 @@ namespace CleanTemplate.Infrastructure.Authentication
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.GivenName, FirstName),
-                new Claim(JwtRegisteredClaimNames.FamilyName, LastName),
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString())
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
             };
             var securityToken = new JwtSecurityToken(claims: claims,
                                                      signingCredentials: signingCredentials,
