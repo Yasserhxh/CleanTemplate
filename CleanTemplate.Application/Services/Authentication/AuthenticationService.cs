@@ -1,6 +1,8 @@
-﻿using CleanTemplate.Application.Common.Interfaces;
+﻿using CleanTemplate.Application.Common.Errors;
+using CleanTemplate.Application.Common.Interfaces;
 using CleanTemplate.Application.Common.Interfaces.Authentication;
 using CleanTemplate.Domain.Entities;
+using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,11 +43,11 @@ namespace CleanTemplate.Application.Authentication
                 token);
         }
 
-        public AuthenticationResult Register(string FirstName, string LastName, string Email, string Password)
+        public OneOf<AuthenticationResult, DuplicateEmailError> Register(string FirstName, string LastName, string Email, string Password)
         {
             // Check if user already exists
             if (_userRepository.GetUserByEmail(Email) is not null)
-                throw new Exception("User with given email already exists");
+                return new DuplicateEmailError();
 
             // Create user
             var user = new User

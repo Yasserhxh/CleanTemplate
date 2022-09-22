@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using CleanTemplate.Application.Common.Errors;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanTemplate.WebApi.Controllers
@@ -9,8 +10,13 @@ namespace CleanTemplate.WebApi.Controllers
         public IActionResult Error()
         {
             Exception? exception = HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
+            var (statusCode, message) = exception switch
+            {
+                IServiceException serviceException => ((int)serviceException.StatusCode, serviceException.ErrorMessage),
+                _ => (StatusCodes.Status500InternalServerError, "An unexpected error occured."),
+            };
 
-            return Problem();
+            return Problem(statusCode: statusCode, title: message);
         }
     }
 }
