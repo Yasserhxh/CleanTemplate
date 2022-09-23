@@ -30,7 +30,10 @@ namespace CleanTemplate.WebApi.Controllers
 
         private static AuthenticationResponse MapAuthResult(AuthenticationResult result)
         {
-            return new AuthenticationResponse(result.user.Id, result.user.FirstName, result.user.LastName, result.user.Email, result.Token);
+            return new AuthenticationResponse(result.user.Id,
+                result.user.FirstName, 
+                result.user.LastName,
+                result.user.Email, result.Token);
         }
 
         [HttpPost("Login")]
