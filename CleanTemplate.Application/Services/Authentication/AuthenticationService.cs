@@ -2,7 +2,7 @@
 using CleanTemplate.Application.Common.Interfaces;
 using CleanTemplate.Application.Common.Interfaces.Authentication;
 using CleanTemplate.Domain.Entities;
-using OneOf;
+using FluentResults;
 
 namespace CleanTemplate.Application.Services.Authentication
 {
@@ -38,11 +38,11 @@ namespace CleanTemplate.Application.Services.Authentication
                 token);
         }
 
-        public OneOf<AuthenticationResult, DuplicateEmailError> Register(string firstName, string lastName, string email, string password)
+        public Result<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
         {
             // Check if user already exists
             if (_userRepository.GetUserByEmail(email) is not null)
-                return new DuplicateEmailError();
+                return Result.Fail<AuthenticationResult>(new [] {new DuplicateEmailError()});
 
             // Create user
             var user = new User

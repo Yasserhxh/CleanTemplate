@@ -2,8 +2,6 @@
 using CleanTemplate.Application.Services.Authentication;
 using CleanTemplate.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using OneOf;
-
 namespace CleanTemplate.WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -20,11 +18,11 @@ namespace CleanTemplate.WebApi.Controllers
         [HttpPost("Register")]
         public IActionResult Register(RegisterRequest request)
         {
-            OneOf<AuthenticationResult, DuplicateEmailError> registerResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
-            return registerResult.Match(
-                authResult => Ok(MapAuthResult(authResult)),
-                _=> Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists.")
-                );
+            var registerResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
+            if (registerResult.IsSuccess)
+                return Ok(MapAuthResult((registerResult.Value)));
+            var firstError = registerResult.Errors[0];
+            return firstError is DuplicateEmailError ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists.") : Problem();
         }
 
         private static AuthenticationResponse MapAuthResult(AuthenticationResult result)
