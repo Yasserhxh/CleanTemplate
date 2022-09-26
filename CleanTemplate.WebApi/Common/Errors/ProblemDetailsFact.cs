@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
 
-namespace CleanTemplate.WebApi.Errors
+namespace CleanTemplate.WebApi.Common.Errors
 {
     public  class ProblemDetailsFact : ProblemDetailsFactory
     {
@@ -15,8 +15,8 @@ namespace CleanTemplate.WebApi.Errors
             IOptions<ApiBehaviorOptions> options,
             IOptions<ProblemDetailsOptions>? problemDetailsOptions = null)
         {
-            _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-            _configure = problemDetailsOptions?.Value?.CustomizeProblemDetails;
+            _options = options.Value ?? throw new ArgumentNullException(nameof(options));
+            _configure = problemDetailsOptions?.Value.CustomizeProblemDetails;
         }
 
         public override ProblemDetails CreateProblemDetails(
@@ -88,13 +88,10 @@ namespace CleanTemplate.WebApi.Errors
                 problemDetails.Type ??= clientErrorData.Link;
             }
 
-            var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
-            if (traceId != null)
-            {
-                problemDetails.Extensions["traceId"] = traceId;
-            }
+            var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
+            problemDetails.Extensions["traceId"] = traceId;
 
-            _configure?.Invoke(new() { HttpContext = httpContext!, ProblemDetails = problemDetails });
+            _configure?.Invoke(new ProblemDetailsContext { HttpContext = httpContext, ProblemDetails = problemDetails });
             problemDetails.Extensions.Add("customProperty", "customValue");
         }
 

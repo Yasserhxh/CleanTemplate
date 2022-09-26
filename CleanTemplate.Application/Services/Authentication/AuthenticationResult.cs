@@ -1,14 +1,9 @@
 ﻿using CleanTemplate.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CleanTemplate.Application.Authentication
+namespace CleanTemplate.Application.Services.Authentication
 {
     public record AuthenticationResult(
-        User user,
+        User User,
         string Token);
    
 }

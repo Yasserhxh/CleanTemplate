@@ -1,6 +1,6 @@
 using CleanTemplate.Application;
 using CleanTemplate.Infrastructure;
-using CleanTemplate.WebApi.Errors;
+using CleanTemplate.WebApi.Common.Errors;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);

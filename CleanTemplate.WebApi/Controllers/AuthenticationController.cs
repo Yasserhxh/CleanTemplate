@@ -1,7 +1,6 @@
-﻿using CleanTemplate.Application.Authentication;
-using CleanTemplate.Application.Common.Errors;
+﻿using CleanTemplate.Application.Common.Errors;
+using CleanTemplate.Application.Services.Authentication;
 using CleanTemplate.Contracts.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 
@@ -21,8 +20,8 @@ namespace CleanTemplate.WebApi.Controllers
         [HttpPost("Register")]
         public IActionResult Register(RegisterRequest request)
         {
-            OneOf<AuthenticationResult, DuplicateEmailError> RegisterResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
-            return RegisterResult.Match(
+            OneOf<AuthenticationResult, DuplicateEmailError> registerResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
+            return registerResult.Match(
                 authResult => Ok(MapAuthResult(authResult)),
                 _=> Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists.")
                 );
@@ -30,17 +29,17 @@ namespace CleanTemplate.WebApi.Controllers
 
         private static AuthenticationResponse MapAuthResult(AuthenticationResult result)
         {
-            return new AuthenticationResponse(result.user.Id,
-                result.user.FirstName, 
-                result.user.LastName,
-                result.user.Email, result.Token);
+            return new AuthenticationResponse(result.User.Id,
+                result.User.FirstName, 
+                result.User.LastName,
+                result.User.Email, result.Token);
         }
 
         [HttpPost("Login")]
         public IActionResult Login(LoginRequest request)
         {
             var result = _authenticationService.Login(request.Email, request.Password);
-            var response = new AuthenticationResponse(result.user.Id, result.user.FirstName, result.user.LastName, result.user.Email, result.Token);
+            var response = new AuthenticationResponse(result.User.Id, result.User.FirstName, result.User.LastName, result.User.Email, result.Token);
             return Ok(response);
         }
     }

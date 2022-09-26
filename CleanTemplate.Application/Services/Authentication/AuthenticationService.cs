@@ -3,13 +3,8 @@ using CleanTemplate.Application.Common.Interfaces;
 using CleanTemplate.Application.Common.Interfaces.Authentication;
 using CleanTemplate.Domain.Entities;
 using OneOf;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CleanTemplate.Application.Authentication
+namespace CleanTemplate.Application.Services.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {
@@ -22,16 +17,16 @@ namespace CleanTemplate.Application.Authentication
             _userRepository = userRepository;
         }
 
-        public AuthenticationResult Login(string Email, string Password)
+        public AuthenticationResult Login(string email, string password)
         {
             // Check User exists
-            if(_userRepository.GetUserByEmail(Email) is not User user)
+            if(_userRepository.GetUserByEmail(email) is not { } user)
                 throw new Exception("User does not exist.");
 
 
             // Validate password correct
 
-            if (user.Password != Password)
+            if (user.Password != password)
                 throw new Exception("Password is invalid");
 
             // Create JWT token
@@ -43,19 +38,19 @@ namespace CleanTemplate.Application.Authentication
                 token);
         }
 
-        public OneOf<AuthenticationResult, DuplicateEmailError> Register(string FirstName, string LastName, string Email, string Password)
+        public OneOf<AuthenticationResult, DuplicateEmailError> Register(string firstName, string lastName, string email, string password)
         {
             // Check if user already exists
-            if (_userRepository.GetUserByEmail(Email) is not null)
+            if (_userRepository.GetUserByEmail(email) is not null)
                 return new DuplicateEmailError();
 
             // Create user
             var user = new User
             {
-                FirstName = FirstName,
-                LastName = LastName,
-                Email = Email,
-                Password = Password
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Password = password
 
             };
             _userRepository.Add(user); 
