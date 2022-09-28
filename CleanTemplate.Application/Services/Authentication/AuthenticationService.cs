@@ -1,9 +1,8 @@
-﻿using CleanTemplate.Application.Common.Errors;
-using CleanTemplate.Application.Common.Interfaces;
+﻿using CleanTemplate.Application.Common.Interfaces;
 using CleanTemplate.Application.Common.Interfaces.Authentication;
+using CleanTemplate.Domain.Common.Errors;
 using CleanTemplate.Domain.Entities;
-using FluentResults;
-
+using ErrorOr;
 namespace CleanTemplate.Application.Services.Authentication
 {
     public class AuthenticationService : IAuthenticationService
@@ -38,11 +37,11 @@ namespace CleanTemplate.Application.Services.Authentication
                 token);
         }
 
-        public Result<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
+        public ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
         {
             // Check if user already exists
             if (_userRepository.GetUserByEmail(email) is not null)
-                return Result.Fail<AuthenticationResult>(new [] {new DuplicateEmailError()});
+                return Errors.User.DuplicateEmail;
 
             // Create user
             var user = new User

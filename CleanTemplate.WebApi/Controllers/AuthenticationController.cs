@@ -1,5 +1,4 @@
-﻿using CleanTemplate.Application.Common.Errors;
-using CleanTemplate.Application.Services.Authentication;
+﻿using CleanTemplate.Application.Services.Authentication;
 using CleanTemplate.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 namespace CleanTemplate.WebApi.Controllers
@@ -19,10 +18,15 @@ namespace CleanTemplate.WebApi.Controllers
         public IActionResult Register(RegisterRequest request)
         {
             var registerResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
-            if (registerResult.IsSuccess)
-                return Ok(MapAuthResult((registerResult.Value)));
-            var firstError = registerResult.Errors[0];
-            return firstError is DuplicateEmailError ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists.") : Problem();
+            //if (registerResult.IsSuccess)
+                //return Ok(MapAuthResult(registerResult.Value));
+            //var firstError = registerResult.Errors[0];
+            //return firstError is DuplicateEmailError ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists.") : Problem();
+            return registerResult.Match(
+                registerResult => Ok(MapAuthResult(registerResult)),
+                _=> Problem(statusCode:StatusCodes.Status409Conflict,
+                    title: "User already exists")
+                );
         }
 
         private static AuthenticationResponse MapAuthResult(AuthenticationResult result)
