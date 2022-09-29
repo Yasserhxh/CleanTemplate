@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
+using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using CleanTemplate.WebApi.Common.Http;
 
 namespace CleanTemplate.WebApi.Common.Errors
 {
@@ -92,7 +94,8 @@ namespace CleanTemplate.WebApi.Common.Errors
             problemDetails.Extensions["traceId"] = traceId;
 
             _configure?.Invoke(new ProblemDetailsContext { HttpContext = httpContext, ProblemDetails = problemDetails });
-            problemDetails.Extensions.Add("customProperty", "customValue");
+            if (httpContext.Items[HttpContextItemKeys.Errors] is List<Error> errors)
+                problemDetails.Extensions.Add("errorCodes", errors.Select(e =>e.Code));
         }
 
     }

@@ -1,40 +1,21 @@
 ﻿using CleanTemplate.Application.Common.Interfaces;
 using CleanTemplate.Application.Common.Interfaces.Authentication;
+using CleanTemplate.Application.Services.Authentication.Common;
 using CleanTemplate.Domain.Common.Errors;
 using CleanTemplate.Domain.Entities;
 using ErrorOr;
-namespace CleanTemplate.Application.Services.Authentication
+
+namespace CleanTemplate.Application.Services.Authentication.Commands
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationCommandService : IAuthenticationCommandService
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUserRepository _userRepository;
 
-        public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
+        public AuthenticationCommandService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
-        }
-
-        public AuthenticationResult Login(string email, string password)
-        {
-            // Check User exists
-            if(_userRepository.GetUserByEmail(email) is not { } user)
-                throw new Exception("User does not exist.");
-
-
-            // Validate password correct
-
-            if (user.Password != password)
-                throw new Exception("Password is invalid");
-
-            // Create JWT token
-            var token = _jwtTokenGenerator.GenerateToken(user);
-
-
-            return new AuthenticationResult(
-                user,
-                token);
         }
 
         public ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password)

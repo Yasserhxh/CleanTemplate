@@ -1,32 +1,29 @@
-﻿using CleanTemplate.Application.Services.Authentication;
+﻿using CleanTemplate.Application.Authentication.Command.Register;
+using CleanTemplate.Application.Authentication.Queries.Login;
+using CleanTemplate.Application.Services.Authentication.Common;
 using CleanTemplate.Contracts.Authentication;
+using CleanTemplate.Domain.Common.Errors;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 namespace CleanTemplate.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : ApiController
     {
-        private readonly IAuthenticationService _authenticationService;
-
-        public AuthenticationController(IAuthenticationService authenticationService)
+        private readonly ISender _mediator;
+        public AuthenticationController(ISender mediator)
         {
-            _authenticationService = authenticationService;
+            _mediator = mediator;
         }
 
         [HttpPost("Register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
-            var registerResult = _authenticationService.Register(request.FirstName, request.LastName, request.Email, request.Password);
-            //if (registerResult.IsSuccess)
-                //return Ok(MapAuthResult(registerResult.Value));
-            //var firstError = registerResult.Errors[0];
-            //return firstError is DuplicateEmailError ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Email already exists.") : Problem();
-            return registerResult.Match(
+            var command = new RegisterCommand(request.FirstName, request.LastName, request.Email, request.Password);
+            var result = await _mediator.Send(command);
+            return result.Match(
                 registerResult => Ok(MapAuthResult(registerResult)),
-                _=> Problem(statusCode:StatusCodes.Status409Conflict,
-                    title: "User already exists")
-                );
+                Problem);
         }
 
         private static AuthenticationResponse MapAuthResult(AuthenticationResult result)
@@ -38,11 +35,20 @@ namespace CleanTemplate.WebApi.Controllers
         }
 
         [HttpPost("Login")]
-        public IActionResult Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            var result = _authenticationService.Login(request.Email, request.Password);
-            var response = new AuthenticationResponse(result.User.Id, result.User.FirstName, result.User.LastName, result.User.Email, result.Token);
-            return Ok(response);
+            var query = new LoginQuery(request.Email, request.Password);
+            var result = await _mediator.Send(query);
+            if (result.IsError && result.FirstError == Errors.Authentication.InvalidCredentials)
+                return Problem(
+                    statusCode: StatusCodes.Status401Unauthorized, 
+                    title: result.FirstError.Description
+                );
+            return result.Match(
+                loginResult => Ok(MapAuthResult(loginResult)),
+                Problem
+                );
+            
         }
     }
 }

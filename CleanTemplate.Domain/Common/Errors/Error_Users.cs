@@ -2,7 +2,7 @@
 
 namespace CleanTemplate.Domain.Common.Errors;
 
-public static class Errors
+public static partial class Errors
 {
     public static class User
     {

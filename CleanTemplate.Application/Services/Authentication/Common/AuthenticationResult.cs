@@ -1,6 +1,6 @@
 ﻿using CleanTemplate.Domain.Entities;
 
-namespace CleanTemplate.Application.Services.Authentication
+namespace CleanTemplate.Application.Services.Authentication.Common
 {
     public record AuthenticationResult(
         User User,
