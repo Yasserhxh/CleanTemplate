@@ -1,16 +1,15 @@
 using CleanTemplate.Application;
 using CleanTemplate.Infrastructure;
-using CleanTemplate.WebApi.Common.Errors;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+using CleanTemplate.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     // Add services to the container.
     builder.Services.AddControllers();
     builder.Services
+        .AddPresentation()
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
-    builder.Services.AddSingleton<ProblemDetailsFactory, ProblemDetailsFact>();
 }
 
 var app = builder.Build();
