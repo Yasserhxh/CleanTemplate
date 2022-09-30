@@ -4,10 +4,12 @@ using CleanTemplate.Contracts.Authentication;
 using CleanTemplate.Domain.Common.Errors;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace CleanTemplate.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class AuthenticationController : ApiController
     {
         private readonly ISender _mediator;
