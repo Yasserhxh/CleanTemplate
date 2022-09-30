@@ -12,11 +12,11 @@ public class LoginQueryHandler :
     IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    private readonly IUserRepository _userRepository;
+    //private readonly IUserRepository _userRepository;
     private readonly ILoginQueryPersistence _loginQueryPersistence;
-    public LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator, ILoginQueryPersistence loginQueryPersistence)
+    public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, ILoginQueryPersistence loginQueryPersistence)
     {
-        _userRepository = userRepository;
+        //_userRepository = userRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
         _loginQueryPersistence = loginQueryPersistence;
     }
