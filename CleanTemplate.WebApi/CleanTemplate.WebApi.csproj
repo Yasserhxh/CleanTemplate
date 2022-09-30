@@ -18,6 +18,7 @@
     <ProjectReference Include="..\CleanTemplate.Application\CleanTemplate.Application.csproj" />
     <ProjectReference Include="..\CleanTemplate.Contracts\CleanTemplate.Contracts.csproj" />
     <ProjectReference Include="..\CleanTemplate.Infrastructure\CleanTemplate.Infrastructure.csproj" />
+    <ProjectReference Include="..\CleanTemplate.Persistence\CleanTemplate.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

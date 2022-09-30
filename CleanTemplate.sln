@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanTemplate.Infrastructur
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanTemplate.WebApi", "CleanTemplate.WebApi\CleanTemplate.WebApi.csproj", "{4D870989-B727-4090-92C7-A54513E304CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanTemplate.Persistence", "CleanTemplate.Persistence\CleanTemplate.Persistence.csproj", "{A80454B5-1758-464A-8B6F-5766EC285FF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{4D870989-B727-4090-92C7-A54513E304CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D870989-B727-4090-92C7-A54513E304CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D870989-B727-4090-92C7-A54513E304CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A80454B5-1758-464A-8B6F-5766EC285FF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A80454B5-1758-464A-8B6F-5766EC285FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A80454B5-1758-464A-8B6F-5766EC285FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A80454B5-1758-464A-8B6F-5766EC285FF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
