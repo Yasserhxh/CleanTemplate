@@ -18,13 +18,13 @@ public class RegisterCommandPersistence : IRegisterCommandPersisetence
 
     public User? GetUserByEmail(string Email)
     {
-        var query = _dbContext.Users.FirstOrDefault(u=>u.Email == Email);
+        var query = ApplicationDbContext.Users.FirstOrDefault(u=>u.Email == Email);
         return query;
     }
 
     public async Task<User?> Add(User user)
     {
-        await _dbContext.Users.AddAsync(user);
+        await ApplicationDbContext.Users.AddAsync(user);
         var confirm = await _unitOfWork.Complete();
         return confirm > 0 ? user : null;
     }

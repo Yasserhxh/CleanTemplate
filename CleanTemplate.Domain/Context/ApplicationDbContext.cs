@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using CleanTemplate.Domain.Entities;
 namespace CleanTemplate.Domain.Context;
 
-public class ApplicationDbContext : IdentityDbContext
+public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<DbContext> options)
         : base(options)
     {
     }
-    public DbSet<User> Users => null!;
+    public static DbSet<User> Users => null!;
 }
