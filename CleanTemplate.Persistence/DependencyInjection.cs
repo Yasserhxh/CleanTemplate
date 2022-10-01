@@ -14,7 +14,7 @@ public static class DependencyInjection
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
-                configuration.GetConnectionString("CleanArch_db")));
+                configuration.GetConnectionString("CleanArch_db") ?? throw new InvalidOperationException()));
         services.AddScoped<ILoginQueryPersistence, LoginQueryPersistence>();
 
         

@@ -1,5 +1,4 @@
-﻿using CleanTemplate.Domain.Common.Errors;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using CleanTemplate.Domain.Entities;
 namespace CleanTemplate.Domain.Context;
@@ -10,6 +9,5 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
-    public DbSet<User> Users { get; set; }
-
+    public DbSet<User> Users => null!;
 }

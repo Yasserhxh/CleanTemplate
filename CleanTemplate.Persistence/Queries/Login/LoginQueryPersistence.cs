@@ -18,6 +18,7 @@ public class LoginQueryPersistence : ILoginQueryPersistence
     public  User? Login(string email)
     {
         var query = _dbContext.Users.FirstOrDefault(p => p.Email == email);
+        
         return query;
     }
 }
