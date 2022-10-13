@@ -13,7 +13,7 @@
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-rc.1.22426.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.SqlServer.Server" Version="1.0.0" />
     <PackageReference Include="OneOf" Version="3.0.223" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
@@ -21,6 +21,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CleanTemplate.Domain\CleanTemplate.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authentication\Queries\Login\Persistence" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Authentication\Queries\Login\Persistence\ILoginQueryPersistence.cs" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
-﻿using CleanTemplate.Application.Authentication.Queries.Login.Persistence;
-using CleanTemplate.Application.Common.Interfaces;
+﻿using CleanTemplate.Application.Common.Interfaces;
 using CleanTemplate.Application.Common.Interfaces.Authentication;
 using CleanTemplate.Application.Services.Authentication.Common;
 using CleanTemplate.Domain.Common.Errors;
@@ -12,19 +11,18 @@ public class LoginQueryHandler :
     IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    //private readonly IUserRepository _userRepository;
-    private readonly ILoginQueryPersistence _loginQueryPersistence;
-    public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, ILoginQueryPersistence loginQueryPersistence)
+    private readonly IUserRepository _userRepository;
+
+    public LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
     {
-        //_userRepository = userRepository;
+        _userRepository = userRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
-        _loginQueryPersistence = loginQueryPersistence;
     }
 
     public Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
     {
         // Check User exists
-        if(_loginQueryPersistence.Login(query.Email) is not { } user)
+        if(_userRepository.GetUserByEmail(query.Email) is not { } user)
             return Task.FromResult<ErrorOr<AuthenticationResult>>(Errors.Authentication.InvalidCredentials);
 
 
